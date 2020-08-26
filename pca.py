@@ -18,7 +18,7 @@ flux = np.vstack((flux_south, flux_north))
 snr = np.vstack((snr_south, snr_north))
 
 shape_data = np.shape(flux)
-
+############################################
 def sigma_corr_data(flux, snr, shape_data):
     """
     NAME:
@@ -59,7 +59,7 @@ def sigma_corr_data(flux, snr, shape_data):
     flux_sig_corr = np.reshape(new_array, (int(shape_data[1]), int(n))).T
         
     return ind_sigma_flag_array, flux_sig_corr
-
+############################################
 
 def stats_data(flux_sig_corr, shape_data):
     """
@@ -83,8 +83,8 @@ def stats_data(flux_sig_corr, shape_data):
 
     statistics = np.reshape(new_array, (shape_data[1], 2)) # First Column is mean and Second column is standard deviation
     return statistics
-    
-   def PCA_PAH_flux(flux_sig_corr, shape_data, standardize_data = True):
+############################################    
+def PCA_PAH_flux(flux_sig_corr, shape_data, standardize_data = True):
     """
     NAME:
     PCA_PAH_flux
@@ -127,15 +127,15 @@ def stats_data(flux_sig_corr, shape_data):
     transformed_data = pca.fit_transform(flux_sig_corr_std)
     
     return coeff, transformed_data
-    
-  list_symbols_PCs = ['0', '1', '2', '3', '4']
+############################################   
+list_symbols_PCs = ['0', '1', '2', '3', '4']
 mapping_labels_PCs = {'0' : r'$PC_{1}$',
                    '1': r'$PC_{2}$',
                    '2': r'$PC_{3}$',
                    '3': r'$PC_{4}$', 
                    '4': r'$PC_{5}$'}
                    
- list_symbols = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15']
+list_symbols = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15']
 mapping = {'0' : flux_sig_corr[:,0], 
            '1': flux_sig_corr[:,2],
            '2': flux_sig_corr[:,4],
@@ -168,6 +168,7 @@ mapping_ylabels = {'0' : r'6.2 $\mu$m flux [$X 10^{-5}$ $W m^{-2} sr^{-1}$]',
                    '13': r' 7.7/11.0 [$X 10^{2}$]',
                    '14': r' 8.6/11.0 [$X 10^{1}$]',
                    '15': r' 6.2/7.7 [$X 10^{-1}$]'}
+
 ######## Biplots ###############
 def biplots(components, names, sv=False):
     """
@@ -243,9 +244,9 @@ def biplots(components, names, sv=False):
     plt.show()
 
     return 
-
+############################################
 names = [r'$z_{6.2}$', r'$z_{11.2}$', r'$z_{7.7}$', r'$z_{11.0}$', r'$z_{8.6}$']
-biplots(coeff, names, sv=False)
+############################################
 
 def eig_spectrum(components, peak_pos, sigma_gauss, sv=False): 
     """
@@ -323,9 +324,10 @@ def eig_spectrum(components, peak_pos, sigma_gauss, sv=False):
     plt.show()
     
     return
+############################################
 peak_pos = np.array([6.2, 7.7, 8.6, 11.0, 11.2])
 sigma_gauss = np.array([0.1, 0.1, 0.1, 0.1, 0.1])
-eig_spectrum(coeff, peak_pos, sigma_gauss, sv=False)
+############################################
 
 def characteristic_spectrum(components, peak_pos, FWHM_gauss, statistics, sv=False): 
     """
@@ -411,10 +413,10 @@ def characteristic_spectrum(components, peak_pos, FWHM_gauss, statistics, sv=Fal
     
 
     return 
-
+############################################
 peak_pos = np.array([6.2, 7.7, 8.6, 11.0, 11.2])
 FWHM_gauss = np.array([0.19, 0.45, 0.29, 0.15, 0.24])
-characteristic_spectrum(coeff, peak_pos, FWHM_gauss, statistics, sv=False)
+############################################
 
 def corr_plot_PC(transformed_data, flux_sig_corr, color_coding = False, sv=False):
     """
@@ -584,7 +586,8 @@ def corr_plot_PC(transformed_data, flux_sig_corr, color_coding = False, sv=False
     plt.show()
     
     return
-corr_plot_PC(transformed_data, flux_sig_corr, color_coding = True, sv=False)
+############################################
+
 
 flux_G76_south = np.loadtxt("ngc_2023_data_south.csv", delimiter = ',', skiprows = 1, usecols = (14))
 flux_G78_south = np.loadtxt("ngc_2023_data_south.csv", delimiter = ',', skiprows = 1, usecols = (15))
@@ -598,8 +601,8 @@ ratio_north = flux_G78_north/flux_G76_north
 Go_Stock_north = 10**((1.70-ratio_north)/0.28)
 
 Go_Stock = np.concatenate((Go_Stock_south, Go_Stock_north))
-print (np.shape(Go_Stock))
 
+############################################
 PAHTAT_south = np.loadtxt("ngc_2023_data_south.csv", delimiter = ',', skiprows = 1, usecols = (11))
 Go_PAHTAT_south = 10**((PAHTAT_south-1.21)/(-0.23))
 
@@ -610,7 +613,7 @@ Go_PAHTAT_north = 10**((PAHTAT_north-1.21)/(-0.23))
 
 
 Go_PAHTAT = np.concatenate((Go_PAHTAT_south, Go_PAHTAT_north))
-
+############################################
 def spatial_maps(sv=False):
     
     """
@@ -795,5 +798,5 @@ def spatial_maps(sv=False):
     plt.show()
     
     return
-spatial_maps()
+############################################
                    
