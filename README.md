@@ -1,4 +1,8 @@
 # PCA-NGC2023
 PCA on PAH fluxes in NGC 2023
 
-The code makes all the plots shown in the paper sidhu et al. 2020
+The code runs with python 3
+
+The code needs following packages
+
+How to run the code
