@@ -1,5 +1,5 @@
 # PCA-NGC2023
-PCA on PAH fluxes in NGC 2023
+Code for Principal Component Analysis of PAH fluxes in reflection nebula NGC 2023
 
 The code runs with python 3
 
