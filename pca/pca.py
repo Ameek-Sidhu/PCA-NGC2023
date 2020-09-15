@@ -8,16 +8,6 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 from matplotlib.ticker import (MultipleLocator, AutoLocator, AutoMinorLocator, ScalarFormatter)
 
-#####  Load data here ###########
-flux_south = np.loadtxt("ngc_2023_data_south.csv", delimiter = ',', skiprows = 1, usecols = (0,1,2,3,4))
-flux_north = np.loadtxt("ngc_2023_data_north.csv", delimiter = ',', skiprows = 1, usecols = (0,1,2,3,4)) 
-snr_south = np.loadtxt("ngc_2023_SNR_south.csv", delimiter = ',', skiprows = 1, usecols = (0,1,2,3,4))
-snr_north = np.loadtxt("ngc_2023_SNR_north.csv", delimiter = ',', skiprows = 1, usecols = (0,1,2,3,4))
-
-flux = np.vstack((flux_south, flux_north))
-snr = np.vstack((snr_south, snr_north))
-
-shape_data = np.shape(flux)
 ############################################
 def sigma_corr_data(flux, snr, shape_data):
     """
@@ -25,17 +15,18 @@ def sigma_corr_data(flux, snr, shape_data):
     sigma_corr_data
     
     DESCRIPTION:
-    This function performs the 3 sigma cuts to the data.
-    For the fluxes where SNR<3, this function will remove those values from the data. 
+    This function performs the 3 sigma cuts on the data, 
+    i.e. it removes the flux value from the data if it does not satisfy the following condition
+    Signal-to-noise ratio (SNR) flux < 3. 
     
     INPUT:
-    flux = 2-D array
-    snr = 2-D array
-    shape_data = shape of the flux array
+    flux = 2-D array containing the original data of PAH fluxes
+    snr = 2-D array containing the SNR of the PAH fluxes
+    shape_data = Tuple containing the shape of the flux array
     
     RETURN:
     ind_sigma_flag_array = 1-D array containing indices which are removed from the data
-    flux_sig_corr = 2-D array containing sigma corrected data
+    flux_sig_corr = 2-D array containing the sigma corrected data of PAH fluxes
    
     
     """
@@ -67,11 +58,13 @@ def stats_data(flux_sig_corr, shape_data):
     This function calculates mean and standard deviation of PAH fluxes
     
     INPUT:
-    flux_sig_corr = 2-D array containing fluxes
-    shape_data = array containing shape of the data 
+    flux_sig_corr = 2-D array containing sigma corrected data of PAH fluxes
+    shape_data = Tuple containing the shape of the data
     
     RETURN:
-    statistics = 2-D array containing mean and standaed deviation
+    statistics = 2-D array containing mean and standard deviation
+                 with the mean of the original variables (PAH fluxes) in the first column 
+                 and the standard deviation in the second column.
     
     """
     new_array = np.array([])
@@ -92,8 +85,8 @@ def PCA_PAH_flux(flux_sig_corr, shape_data, standardize_data = True):
     of PAH fluxes.
     
     INPUT:
-    flux_sig_corr = 2-D array of PAH fluxes.
-    shape_data = shape of the data
+    flux_sig_corr = 2-D array containing sigma corrected data of PAH fluxes.
+    shape_data = Tuple containing the shape of the data
     
     INPUT KEYWORD PARAMETERS:
     standardize_data- You may want to standardize the original variables before performing PCA
@@ -101,8 +94,8 @@ def PCA_PAH_flux(flux_sig_corr, shape_data, standardize_data = True):
     By default data is standardized before performing PCA.
     
     RETURN:
-    coeff: Coefficient of PCs in terms of original variables.
-    transformed_data: 2-D array of the original data projected into PCA space.
+    coeff: 2-D array containing coefficient of PCs in terms of original variables.
+    transformed_data: 2-D array containing the original variables projected into PCA space.
     
     """
     if standardize_data == True:
@@ -127,46 +120,6 @@ def PCA_PAH_flux(flux_sig_corr, shape_data, standardize_data = True):
     
     return coeff, transformed_data
 ############################################   
-list_symbols_PCs = ['0', '1', '2', '3', '4']
-mapping_labels_PCs = {'0' : r'$PC_{1}$',
-                   '1': r'$PC_{2}$',
-                   '2': r'$PC_{3}$',
-                   '3': r'$PC_{4}$', 
-                   '4': r'$PC_{5}$'}
-                   
-list_symbols = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15']
-mapping = {'0' : flux_sig_corr[:,0], 
-           '1': flux_sig_corr[:,2],
-           '2': flux_sig_corr[:,4],
-           '3': flux_sig_corr[:,3],
-           '4': flux_sig_corr[:,1],
-           '5': (flux_sig_corr[:,0]+flux_sig_corr[:,1]+flux_sig_corr[:,2]+flux_sig_corr[:,3]+flux_sig_corr[:,4]),
-           '6': (flux_sig_corr[:,0]/flux_sig_corr[:,1]),
-           '7': (flux_sig_corr[:,2]/flux_sig_corr[:,1]),
-           '8': (flux_sig_corr[:,4]/flux_sig_corr[:,1]),
-           '9': (flux_sig_corr[:,3]/flux_sig_corr[:,1]),
-           '10': (flux_sig_corr[:,0]/flux_sig_corr[:,4]),
-           '11': (flux_sig_corr[:,2]/flux_sig_corr[:,4]),
-           '12': (flux_sig_corr[:,0]/flux_sig_corr[:,3]),
-           '13': (flux_sig_corr[:,2]/flux_sig_corr[:,3]),
-           '14': (flux_sig_corr[:,4]/flux_sig_corr[:,3]),
-           '15': (flux_sig_corr[:,0]/flux_sig_corr[:,2])}
-mapping_ylabels = {'0' : r'6.2 $\mu$m flux [$X 10^{-5}$ $W m^{-2} sr^{-1}$]',
-                   '1': r'7.7 $\mu$m flux [$X 10^{-5}$ $W m^{-2} sr^{-1}$]',
-                   '2': r'8.6 $\mu$m flux [$X 10^{-6}$ $W m^{-2} sr^{-1}$]',
-                   '3': r'11.0 $\mu$m flux [$X 10^{-7}$ $W m^{-2} sr^{-1}$]', 
-                   '4': r'11.2 $\mu$m flux [$X 10^{-6}$ $W m^{-2} sr^{-1}$]', 
-                   '5': r'Total PAH flux [$X 10^{-5}$ $W m^{-2} sr^{-1}$]',
-                   '6': r' 6.2/11.2',
-                   '7': r' 7.7/11.2',
-                   '8': r' 8.6/11.2',
-                   '9': r' 11.0/11.2 [$X 10^{-1}$]',
-                   '10': r' 6.2/8.6',
-                   '11': r' 7.7/8.6 [$X 10^{1}$]',
-                   '12': r' 6.2/11.0 [$X 10^{1}$]',
-                   '13': r' 7.7/11.0 [$X 10^{2}$]',
-                   '14': r' 8.6/11.0 [$X 10^{1}$]',
-                   '15': r' 6.2/7.7 [$X 10^{-1}$]'}
 
 ######## Biplots ###############
 def biplots(components, names, sv=False):
@@ -179,8 +132,8 @@ def biplots(components, names, sv=False):
     onto the reference frame defined by principal components.
     
     INPUT:
-    components = coefficients of PCs in terms of original variables.
-    names = array of names of original variables.
+    components = 2-D array containing coefficients of PCs in terms of original variables.
+    names = list of names of original variables.
     
     INPUT KEYWORD PARAMETERS:
     sv- You may want to save the file.
@@ -244,8 +197,6 @@ def biplots(components, names, sv=False):
 
     return 
 ############################################
-names = [r'$z_{6.2}$', r'$z_{11.2}$', r'$z_{7.7}$', r'$z_{11.0}$', r'$z_{8.6}$']
-############################################
 
 def eig_spectrum(components, peak_pos, sigma_gauss, sv=False): 
     """
@@ -253,12 +204,15 @@ def eig_spectrum(components, peak_pos, sigma_gauss, sv=False):
     eig_spectrum
     
     DESCRIPTION:
-    Eigen spectrum corresponding to principal component. UPDATE IT.....
+    This function creates eigen spectra of principal components. 
+    Eigen spectrum is representative of the eigen vector associated with 
+    the Principal component.
+  
     
     INPUT:
-    components = 
-    peak_pos = 1-D array of peak positions of PAH bands in units of microns.
-    sigma_gauss = 1-D array of standard deviations for the gaussians of PAH bands
+    components = 2-D array containing coefficients of PCs in terms of original variables. 
+    peak_pos = 1-D array containing peak positions of PAH bands in units of microns.
+    sigma_gauss = 1-D array containing standard deviations for the gaussians of PAH bands
     
     INPUT KEYWORD PARAMETERS:
     sv- You may want to save the file.
@@ -323,9 +277,6 @@ def eig_spectrum(components, peak_pos, sigma_gauss, sv=False):
     
     return
 ############################################
-peak_pos = np.array([6.2, 7.7, 8.6, 11.0, 11.2])
-sigma_gauss = np.array([0.1, 0.1, 0.1, 0.1, 0.1])
-############################################
 
 def characteristic_spectrum(components, peak_pos, FWHM_gauss, statistics, sv=False): 
     """
@@ -333,13 +284,18 @@ def characteristic_spectrum(components, peak_pos, FWHM_gauss, statistics, sv=Fal
     characteristic_spectrum
     
     DESCRIPTION:
-    UPDATE IT.....
+    This function creates characteristic spectra of principal components. 
+    The characteristic spectrum of a particular PC is an artificial PAH spectrum derived 
+    using the contribution of one PC only to the standardized flux variables, and subsequently
+    extracting the actual flux values for the PAH bands by applying the
+    inverse of the standardization operation.
     
     INPUT:
-    components = 
-    peak_pos = 1-D array of peak positions of PAH bands in units of microns.
-    FWHM_gauss = 1-D array of Full width at half maximum for the gaussians of PAH bands.
-    statistics = 
+    components = 2-D array containing coefficients of PCs in terms of original variables. 
+    peak_pos = 1-D array containing peak positions of PAH bands in units of microns.
+    FWHM_gauss = 1-D array containing Full width at half maximum for the gaussians of PAH bands.
+    statistics = 2-D array containing mean and standard deviation of the sigma corrected data of PAH fluxes
+                 with mean in the first column and standard deviation in the other column
     
     INPUT KEYWORD PARAMETERS:
     sv- You may want to save the file.
@@ -413,9 +369,6 @@ def characteristic_spectrum(components, peak_pos, FWHM_gauss, statistics, sv=Fal
 
     return 
 ############################################
-peak_pos = np.array([6.2, 7.7, 8.6, 11.0, 11.2])
-FWHM_gauss = np.array([0.19, 0.45, 0.29, 0.15, 0.24])
-############################################
 
 def corr_plot_PC(transformed_data, flux_sig_corr, color_coding = False, sv=False):
     """
@@ -423,11 +376,12 @@ def corr_plot_PC(transformed_data, flux_sig_corr, color_coding = False, sv=False
     corr_plot_PC
     
     DESCRIPTION:
-    UPDATE IT.....
+    This function makes the correlation plots
+    of Principal Components with various PAH fluxes
     
     INPUT:
-    transformed_data = 
-    flux_sig_corr = 
+    transformed_data = 2-D array containing the original variables projected in reference frame of PCs 
+    flux_sig_corr = 2-D array containing the original variables
     
     INPUT KEYWORD PARAMETERS:
     color_coding - You may want to color-code the correlation plots. 
@@ -614,7 +568,8 @@ def spatial_maps(sv=False):
     spatial_maps
     
     DESCRIPTION:
-    UPDATE IT.....
+    This function create maps to show spatial distribution
+    of variable across the north and the south FOVs of NGC 2023.
     
     INPUT KEYWORD PARAMETERS: 
     sv- You may want to save the file.
@@ -789,5 +744,88 @@ def spatial_maps(sv=False):
     
     return
 ############################################
-                   
+#####  Load data here ###########
+flux_south = np.loadtxt("ngc_2023_data_south.csv", delimiter = ',', skiprows = 1, usecols = (0,1,2,3,4))
+flux_north = np.loadtxt("ngc_2023_data_north.csv", delimiter = ',', skiprows = 1, usecols = (0,1,2,3,4)) 
+snr_south = np.loadtxt("ngc_2023_SNR_south.csv", delimiter = ',', skiprows = 1, usecols = (0,1,2,3,4))
+snr_north = np.loadtxt("ngc_2023_SNR_north.csv", delimiter = ',', skiprows = 1, usecols = (0,1,2,3,4))
 
+flux = np.vstack((flux_south, flux_north))
+snr = np.vstack((snr_south, snr_north))
+
+shape_data = np.shape(flux)
+############################################
+ind_sigma_flag_array, flux_sig_corr = sigma_corr_data(flux, snr, shape_data)
+statistics = stats_data(flux_sig_corr, shape_data)
+coeff, transformed_data = PCA_PAH_flux(flux_sig_corr, shape_data, standardize_data = True)
+
+list_symbols_PCs = ['0', '1', '2', '3', '4']
+mapping_labels_PCs = {'0' : r'$PC_{1}$',
+                   '1': r'$PC_{2}$',
+                   '2': r'$PC_{3}$',
+                   '3': r'$PC_{4}$', 
+                   '4': r'$PC_{5}$'}
+                   
+list_symbols = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15']
+mapping = {'0' : flux_sig_corr[:,0], 
+           '1': flux_sig_corr[:,2],
+           '2': flux_sig_corr[:,4],
+           '3': flux_sig_corr[:,3],
+           '4': flux_sig_corr[:,1],
+           '5': (flux_sig_corr[:,0]+flux_sig_corr[:,1]+flux_sig_corr[:,2]+flux_sig_corr[:,3]+flux_sig_corr[:,4]),
+           '6': (flux_sig_corr[:,0]/flux_sig_corr[:,1]),
+           '7': (flux_sig_corr[:,2]/flux_sig_corr[:,1]),
+           '8': (flux_sig_corr[:,4]/flux_sig_corr[:,1]),
+           '9': (flux_sig_corr[:,3]/flux_sig_corr[:,1]),
+           '10': (flux_sig_corr[:,0]/flux_sig_corr[:,4]),
+           '11': (flux_sig_corr[:,2]/flux_sig_corr[:,4]),
+           '12': (flux_sig_corr[:,0]/flux_sig_corr[:,3]),
+           '13': (flux_sig_corr[:,2]/flux_sig_corr[:,3]),
+           '14': (flux_sig_corr[:,4]/flux_sig_corr[:,3]),
+           '15': (flux_sig_corr[:,0]/flux_sig_corr[:,2])}
+mapping_ylabels = {'0' : r'6.2 $\mu$m flux [$X 10^{-5}$ $W m^{-2} sr^{-1}$]',
+                   '1': r'7.7 $\mu$m flux [$X 10^{-5}$ $W m^{-2} sr^{-1}$]',
+                   '2': r'8.6 $\mu$m flux [$X 10^{-6}$ $W m^{-2} sr^{-1}$]',
+                   '3': r'11.0 $\mu$m flux [$X 10^{-7}$ $W m^{-2} sr^{-1}$]', 
+                   '4': r'11.2 $\mu$m flux [$X 10^{-6}$ $W m^{-2} sr^{-1}$]', 
+                   '5': r'Total PAH flux [$X 10^{-5}$ $W m^{-2} sr^{-1}$]',
+                   '6': r' 6.2/11.2',
+                   '7': r' 7.7/11.2',
+                   '8': r' 8.6/11.2',
+                   '9': r' 11.0/11.2 [$X 10^{-1}$]',
+                   '10': r' 6.2/8.6',
+                   '11': r' 7.7/8.6 [$X 10^{1}$]',
+                   '12': r' 6.2/11.0 [$X 10^{1}$]',
+                   '13': r' 7.7/11.0 [$X 10^{2}$]',
+                   '14': r' 8.6/11.0 [$X 10^{1}$]',
+                   '15': r' 6.2/7.7 [$X 10^{-1}$]'}
+############################################
+# Uncomment following lines if you wish to create biplots
+#names = [r'$z_{6.2}$', r'$z_{11.2}$', r'$z_{7.7}$', r'$z_{11.0}$', r'$z_{8.6}$']
+#biplots(coeff, names, sv=False)
+
+############################################
+# Uncomment following lines if you wish to create eigen spectra of PCs
+
+#peak_pos = np.array([6.2, 7.7, 8.6, 11.0, 11.2])
+#sigma_gauss = np.array([0.1, 0.1, 0.1, 0.1, 0.1])
+#eig_spectrum(coeff, peak_pos, sigma_gauss, sv=False)
+
+############################################
+# Uncomment following lines if you wish to create characteristic spectra of PCs
+
+#peak_pos = np.array([6.2, 7.7, 8.6, 11.0, 11.2])
+#FWHM_gauss = np.array([0.19, 0.45, 0.29, 0.15, 0.24])
+#characteristic_spectrum(coeff, peak_pos, FWHM_gauss, statistics, sv=False)
+
+############################################
+# Uncomment following lines if you wish to create correlation plots of PCs with various PAH fluxes
+
+#corr_plot_PC(transformed_data, flux_sig_corr, color_coding = True, sv=False)
+
+############################################
+# Uncomment following lines if you wish to create spatial maps
+
+#spatial_maps()
+
+############################################
