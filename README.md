@@ -1,11 +1,8 @@
 # PCA-NGC2023
-Code for Principal Component Analysis of PAH fluxes in reflection nebula NGC 2023
+Python code for Principal Component Analysis of PAH fluxes in reflection nebula NGC 2023
 
- 
+Following packages are required to run the code:
 
-The code runs with python 3
-
-The code needs following packages
 
 To run the code
 
