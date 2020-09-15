@@ -3,6 +3,18 @@ We performed the principal component analysis (PCA) of the polycyclic aromatic h
 
 The 'pca' folder contains the data and the python code to perform the PCA analysis.
 
+To analyse the data, following figures are made using the code:
+
+Biplots
+
+Eigen Spectra of Principal Components
+
+Characteristic Spectra of Principal Components
+
+Correlation plots of Principal Components with various PAH fluxes
+
+Spatial maps of Principal Components, radiation field strengths, and PAH fluxes
+
 # Following packages are required to run the code:
 numpy
 
@@ -18,7 +30,7 @@ sklearn
 # Type the following to run the code:
 python pca.py
 
-(Uncomment lines at the end of the code accordingly)
+Note: Uncomment lines at the end of the code, depending on the figure you wish to create.
 
 
 
