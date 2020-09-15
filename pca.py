@@ -34,12 +34,9 @@ def sigma_corr_data(flux, snr, shape_data):
     shape_data = shape of the flux array
     
     RETURN:
-    ind_sigma_flag_array = This array has indices which are removed from the data
-    flux_sig_corr = sigma corrected data
-    
-    
-    INPUT KEYWORD PARAMETERS:
-    UPDATE IT.....
+    ind_sigma_flag_array = 1-D array containing indices which are removed from the data
+    flux_sig_corr = 2-D array containing sigma corrected data
+   
     
     """
     
@@ -64,16 +61,17 @@ def sigma_corr_data(flux, snr, shape_data):
 def stats_data(flux_sig_corr, shape_data):
     """
     NAME:
-    sigma_corr_data
+    stats_data
     
     DESCRIPTION:
-    UPDATE IT.....
+    This function calculates mean and standard deviation of PAH fluxes
     
     INPUT:
-    UPDATE IT.....
+    flux_sig_corr = 2-D array containing fluxes
+    shape_data = array containing shape of the data 
     
-    INPUT KEYWORD PARAMETERS:
-    UPDATE IT.....
+    RETURN:
+    statistics = 2-D array containing mean and standaed deviation
     
     """
     new_array = np.array([])
@@ -95,6 +93,7 @@ def PCA_PAH_flux(flux_sig_corr, shape_data, standardize_data = True):
     
     INPUT:
     flux_sig_corr = 2-D array of PAH fluxes.
+    shape_data = shape of the data
     
     INPUT KEYWORD PARAMETERS:
     standardize_data- You may want to standardize the original variables before performing PCA
@@ -259,8 +258,7 @@ def eig_spectrum(components, peak_pos, sigma_gauss, sv=False):
     INPUT:
     components = 
     peak_pos = 1-D array of peak positions of PAH bands in units of microns.
-    sigma_gauss = 1-D array of standard deviations for the gaussians of PAH bands.
-    
+    sigma_gauss = 1-D array of standard deviations for the gaussians of PAH bands
     
     INPUT KEYWORD PARAMETERS:
     sv- You may want to save the file.
@@ -338,6 +336,7 @@ def characteristic_spectrum(components, peak_pos, FWHM_gauss, statistics, sv=Fal
     UPDATE IT.....
     
     INPUT:
+    components = 
     peak_pos = 1-D array of peak positions of PAH bands in units of microns.
     FWHM_gauss = 1-D array of Full width at half maximum for the gaussians of PAH bands.
     statistics = 
@@ -427,10 +426,12 @@ def corr_plot_PC(transformed_data, flux_sig_corr, color_coding = False, sv=False
     UPDATE IT.....
     
     INPUT:
-    UPDATE IT.....
+    transformed_data = 
+    flux_sig_corr = 
     
     INPUT KEYWORD PARAMETERS:
-    color_coding - 
+    color_coding - You may want to color-code the correlation plots. 
+    By default correlation plots are not color coded.
     sv- You may want to save the file.
     By default figure is not saved.
     
@@ -587,14 +588,10 @@ def corr_plot_PC(transformed_data, flux_sig_corr, color_coding = False, sv=False
     
     return
 ############################################
-
-
 flux_G76_south = np.loadtxt("ngc_2023_data_south.csv", delimiter = ',', skiprows = 1, usecols = (7))
 flux_G78_south = np.loadtxt("ngc_2023_data_south.csv", delimiter = ',', skiprows = 1, usecols = (8))
 ratio_south = flux_G78_south/flux_G76_south
 Go_Stock_south = 10**((1.70-ratio_south)/0.28)
-
-
 flux_G76_north = np.loadtxt("ngc_2023_data_north.csv", delimiter = ',', skiprows = 1, usecols = (7))
 flux_G78_north = np.loadtxt("ngc_2023_data_north.csv", delimiter = ',', skiprows = 1, usecols = (6))
 ratio_north = flux_G78_north/flux_G76_north
@@ -605,12 +602,8 @@ Go_Stock = np.concatenate((Go_Stock_south, Go_Stock_north))
 ############################################
 PAHTAT_south = np.loadtxt("ngc_2023_data_south.csv", delimiter = ',', skiprows = 1, usecols = (6))
 Go_PAHTAT_south = 10**((PAHTAT_south-1.21)/(-0.23))
-
-
 PAHTAT_north = np.loadtxt("ngc_2023_data_north.csv", delimiter = ',', skiprows = 1, usecols = (5)) 
 Go_PAHTAT_north = 10**((PAHTAT_north-1.21)/(-0.23))
-
-
 
 Go_PAHTAT = np.concatenate((Go_PAHTAT_south, Go_PAHTAT_north))
 ############################################
@@ -621,9 +614,6 @@ def spatial_maps(sv=False):
     spatial_maps
     
     DESCRIPTION:
-    UPDATE IT.....
-    
-    INPUT:
     UPDATE IT.....
     
     INPUT KEYWORD PARAMETERS: 
