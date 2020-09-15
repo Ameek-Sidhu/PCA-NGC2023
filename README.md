@@ -18,6 +18,8 @@ sklearn
 # Type the following to run the code:
 python pca.py
 
+(Uncomment lines at the end of the code)
+
 
 
 
