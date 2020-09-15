@@ -589,25 +589,25 @@ def corr_plot_PC(transformed_data, flux_sig_corr, color_coding = False, sv=False
 ############################################
 
 
-flux_G76_south = np.loadtxt("ngc_2023_data_south.csv", delimiter = ',', skiprows = 1, usecols = (14))
-flux_G78_south = np.loadtxt("ngc_2023_data_south.csv", delimiter = ',', skiprows = 1, usecols = (15))
+flux_G76_south = np.loadtxt("ngc_2023_data_south.csv", delimiter = ',', skiprows = 1, usecols = (7))
+flux_G78_south = np.loadtxt("ngc_2023_data_south.csv", delimiter = ',', skiprows = 1, usecols = (8))
 ratio_south = flux_G78_south/flux_G76_south
 Go_Stock_south = 10**((1.70-ratio_south)/0.28)
 
 
-flux_G76_north = np.loadtxt("G76.csv", delimiter = ',', usecols = (0))
-flux_G78_north = np.loadtxt("G78.csv", delimiter = ',', usecols = (0))
+flux_G76_north = np.loadtxt("ngc_2023_data_north.csv", delimiter = ',', skiprows = 1, usecols = (7))
+flux_G78_north = np.loadtxt("ngc_2023_data_north.csv", delimiter = ',', skiprows = 1, usecols = (6))
 ratio_north = flux_G78_north/flux_G76_north
 Go_Stock_north = 10**((1.70-ratio_north)/0.28)
 
 Go_Stock = np.concatenate((Go_Stock_south, Go_Stock_north))
 
 ############################################
-PAHTAT_south = np.loadtxt("ngc_2023_data_south.csv", delimiter = ',', skiprows = 1, usecols = (11))
+PAHTAT_south = np.loadtxt("ngc_2023_data_south.csv", delimiter = ',', skiprows = 1, usecols = (6))
 Go_PAHTAT_south = 10**((PAHTAT_south-1.21)/(-0.23))
 
 
-PAHTAT_north = np.loadtxt("ngc_2023_data_north.csv", delimiter = ',', skiprows = 1, usecols = (16)) 
+PAHTAT_north = np.loadtxt("ngc_2023_data_north.csv", delimiter = ',', skiprows = 1, usecols = (5)) 
 Go_PAHTAT_north = 10**((PAHTAT_north-1.21)/(-0.23))
 
 
